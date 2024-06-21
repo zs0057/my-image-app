@@ -12,13 +12,21 @@ export default function Home() {
       formData.append("image", image);
     }
 
-    const res = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await res.json();
-    setUrl(data.url);
+      if (!res.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await res.json();
+      setUrl(data.url);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
